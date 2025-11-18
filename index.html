@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebDesk – Widescreen Browser Desktop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="brand">
+        <span class="brand-mark">⎇</span>
+        <span class="brand-text">WebDesk</span>
+      </div>
+      <div class="top-controls">
+        <button id="add-panel-btn" class="btn ghost">+ Panel</button>
+        <button id="open-settings-btn" class="btn primary">Settings</button>
+      </div>
+    </header>
+
+    <main class="desktop">
+      <section id="desktop-header" class="desktop-header">
+        <h1 class="headline">Your browser workspace</h1>
+        <p class="subhead">
+          WebDesk turns your browser into a desktop-style home screen where your most-used sites sit
+          together like apps, ready the moment you open a tab.
+        </p>
+      </section>
+
+      <section id="panel-grid" class="panel-grid">
+        <!-- Panels injected by JavaScript -->
+      </section>
+    </main>
+
+  </div>
+
+  <!-- Panel Editor Modal -->
+  <div class="modal-backdrop hidden" id="panel-modal-backdrop">
+    <div class="modal">
+      <header class="modal-header">
+        <h2 id="panel-modal-title">New panel</h2>
+      </header>
+      <div class="modal-body">
+        <label class="field">
+          <span class="field-label">Panel title</span>
+          <input id="panel-title-input" class="input" type="text" placeholder="Daily launchpad" />
+        </label>
+
+        <label class="field">
+          <span class="field-label">Subtitle (optional)</span>
+          <input id="panel-subtitle-input" class="input" type="text" placeholder="The stuff you open every day" />
+        </label>
+
+        <label class="field">
+          <span class="field-label">Width</span>
+          <select id="panel-width-input" class="input">
+            <option value="1">1 column</option>
+            <option value="2">2 columns</option>
+          </select>
+        </label>
+
+        <div class="field">
+          <div class="field-label">Links in this panel</div>
+          <div id="links-container" class="links-editor">
+            <!-- Link rows injected by JavaScript -->
+          </div>
+          <button id="add-link-row-btn" class="btn tiny ghost" type="button">+ Add link</button>
+        </div>
+      </div>
+      <footer class="modal-footer">
+        <button class="btn ghost" type="button" data-close-panel-modal>Cancel</button>
+        <button id="save-panel-btn" class="btn primary" type="button">Save panel</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop hidden" id="settings-modal-backdrop">
+    <div class="modal">
+      <header class="modal-header">
+        <h2>Appearance & layout</h2>
+      </header>
+      <div class="modal-body">
+        <label class="field">
+          <span class="field-label">Accent hue</span>
+          <input id="accent-range" class="input" type="range" min="0" max="360" />
+        </label>
+
+        <label class="field">
+          <span class="field-label">Base font size</span>
+          <input id="font-size-range" class="input" type="range" min="14" max="20" />
+          <span class="field-hint">Applied to cards and body copy.</span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Wallpaper</span>
+          <input
+            id="wallpaper-input"
+            class="input"
+            type="file"
+            accept="image/*"
+          />
+          <div style="display:flex; gap:0.5rem; margin-top:0.4rem; flex-wrap:wrap;">
+            <button id="clear-wallpaper-btn" class="btn tiny ghost" type="button">
+              Reset to default
+            </button>
+          </div>
+          <span class="field-hint">
+            Choose an image to use as your desktop wallpaper. It’s stored locally in this browser only.
+          </span>
+        </label>
+
+        <p class="field-hint">
+          This demo stores your layout in this browser using <code>localStorage</code>. In a real deployment, a backend
+          could key profiles by IP address or account instead.
+        </p>
+
+      </div>
+      <footer class="modal-footer">
+        <button class="btn ghost" type="button" data-close-settings-modal>Close</button>
+      </footer>
+    </div>
+  </div>
+
+  <template id="link-row-template">
+    <div class="link-row">
+      <input class="input link-label-input" type="text" placeholder="Label" />
+      <input class="input link-url-input" type="url" placeholder="https://example.com" />
+      <button class="icon-btn remove-link-row-btn" title="Remove link" type="button">✕</button>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
