@@ -638,6 +638,7 @@ body.has-wallpaper {
 
   .panel {
     padding: 0.9rem;
+    grid-column: auto !important; /* 🔑 force 1-column width on mobile */
   }
 
   .link-list {
