@@ -42,6 +42,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -606,22 +607,60 @@ body.has-wallpaper {
 
 @media (max-width: 720px) {
   .top-bar {
-    padding-inline: 1.1rem;
+    padding-inline: 1rem;
+  }
+
+  .brand-text {
+    display: none; /* icon only on tiny screens */
   }
 
   .desktop {
-    padding-inline: 1.1rem;
+    padding-inline: 1rem;
+  }
+
+  .desktop-header {
+    padding-top: 0.9rem;
+  }
+
+  .headline {
+    font-size: 1.4rem;
+  }
+
+  .subhead {
+    max-width: 100%;
+    font-size: 0.9rem;
   }
 
   .panel-grid {
-    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr); /* single column */
+    gap: 0.9rem;
   }
 
   .panel {
-    padding: 1rem;
+    padding: 0.9rem;
+  }
+
+  .link-list {
+    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+    gap: 0.7rem;
+  }
+
+  .link-chip {
+    max-width: none;
+    min-height: 96px;
+    padding: 0.6rem 0.5rem;
+  }
+
+  .link-favicon {
+    width: 40px;
+    height: 40px;
   }
 
   .link-row {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .modal {
+    width: calc(100% - 2rem);
   }
 }
