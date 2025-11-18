@@ -1,5 +1,5 @@
 (function () {
-  const STORAGE_KEY = "webdesk_profile_v4";
+  const STORAGE_KEY = "webdesk_profile_v5";
 
   /**
    * A simple profile model. In a production app, this could be keyed by IP
