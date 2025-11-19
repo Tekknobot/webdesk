@@ -360,6 +360,32 @@
       item.addEventListener("touchstart", onTouchStart);
       item.addEventListener("touchend", onTouchEnd);
     });
+
+    // 🔹 NEW: make the whole list a drop target
+    const lists = document.querySelectorAll(".link-list");
+    lists.forEach(list => {
+      list.addEventListener("dragover", onListDragOver);
+      list.addEventListener("drop", onListDrop);
+    });
+  }
+
+  function onListDragOver(e) {
+  // Allow dropping anywhere in the list (even between items)
+  e.preventDefault();
+  }
+
+  function onListDrop(e) {
+    e.preventDefault();
+
+    const placeholder = dragState.placeholder;
+    const dragging = dragState.draggingEl;
+    if (!placeholder || !dragging) return;
+
+    // If user drops in the empty area, still move item to placeholder position
+    placeholder.replaceWith(dragging);
+
+    // Persist immediately (dragend will also do it, but this is safe)
+    saveNewOrder(dragging.dataset.panelId);
   }
 
   function onTouchStart(e) {
@@ -380,8 +406,10 @@
     dragState.startPanelId = li.dataset.panelId;
     dragState.startIndex = Number(li.dataset.index);
 
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/plain", "dragging");
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", "dragging");
+    }
 
     li.classList.add("dragging");
   }
@@ -454,16 +482,24 @@
     const panel = profile.panels.find(p => p.id === panelId);
     if (!panel) return;
 
-    const linkItems = [...document.querySelectorAll(`.link-item[data-panel-id="${panelId}"]`)];
-    const newOrder = linkItems.map(li => {
-      const idx = Number(li.dataset.index);
-      return panel.links[idx];
-    });
+    // Only real items, skip placeholder if somehow present
+    const linkItems = [
+      ...document.querySelectorAll(`.link-item[data-panel-id="${panelId}"]:not(.placeholder)`)
+    ];
+
+    const newOrder = linkItems.map((li, idx) => {
+      const oldIdx = Number(li.dataset.index);
+      const link = panel.links[oldIdx];
+
+      // Refresh data-index to match the new visual order
+      li.dataset.index = idx;
+
+      return link;
+    }).filter(Boolean);
 
     panel.links = newOrder;
     saveProfile();
   }
-
 
   /* Panel modal */
 
