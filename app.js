@@ -399,6 +399,10 @@
     if (!dragState.placeholder) {
       dragState.placeholder = document.createElement("li");
       dragState.placeholder.className = "link-item placeholder";
+
+      // 🔹 Make the placeholder a valid drop target
+      dragState.placeholder.addEventListener("dragover", onDragOver);
+      dragState.placeholder.addEventListener("drop", onDrop);
     }
 
     if (e.clientY < halfway) {
@@ -415,7 +419,21 @@
     const dragging = dragState.draggingEl;
     if (!placeholder || !dragging) return;
 
+    // Move dragged item where the placeholder is
     placeholder.replaceWith(dragging);
+  }
+
+  function onDragEnd() {
+    const dragging = dragState.draggingEl;
+    const placeholder = dragState.placeholder;
+
+    if (placeholder) placeholder.remove();
+    if (dragging) dragging.classList.remove("dragging");
+
+    if (dragging) saveNewOrder(dragging.dataset.panelId);
+
+    dragState.draggingEl = null;
+    dragState.placeholder = null;
   }
 
   function onDragEnd() {
