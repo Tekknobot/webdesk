@@ -105,14 +105,17 @@
       </header>
       <div class="modal-body">
         <label class="field">
-          <span class="field-label">Accent hue</span>
-          <input id="accent-range" class="input" type="range" min="0" max="360" />
-        </label>
-
-        <label class="field">
-          <span class="field-label">Base font size</span>
-          <input id="font-size-range" class="input" type="range" min="14" max="20" />
-          <span class="field-hint">Applied to cards and body copy.</span>
+          <span class="field-label">Theme</span>
+          <select id="theme-select" class="input">
+            <option value="night-sky">Night sky</option>
+            <option value="bubble-gum">Bubble gum</option>
+            <option value="sunset">Sunset</option>
+            <option value="tropical-forest">Tropical forest</option>
+            <option value="ocean">Ocean</option>
+          </select>
+          <span class="field-hint">
+            Changes accent color and background vibe.
+          </span>
         </label>
 
         <label class="field">

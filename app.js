@@ -6,7 +6,7 @@
    * or user account on the server side instead of just localStorage.
    */
   const defaultProfile = {
-    theme: "system",
+    theme: "night-sky",
     accentHue: 210,
     baseFontSize: 16,
     wallpaperDataUrl: null,
@@ -119,6 +119,29 @@
     ],
   };
 
+  const THEMES = {
+    "night-sky": {
+      accentHue: 210,
+      background: "radial-gradient(circle at top left, #151628 0, #050509 40%, #050508 100%)",
+    },
+    "bubble-gum": {
+      accentHue: 320,
+      background: "radial-gradient(circle at top left, #ffb1e3 0, #7b2c79 40%, #250020 100%)",
+    },
+    "sunset": {
+      accentHue: 24,
+      background: "radial-gradient(circle at top left, #ffcf99 0, #ff7a5c 35%, #3a0b35 100%)",
+    },
+    "tropical-forest": {
+      accentHue: 140,
+      background: "radial-gradient(circle at top left, #7cf0a4 0, #0f3d2e 40%, #030c08 100%)",
+    },
+    "ocean": {
+      accentHue: 200,
+      background: "radial-gradient(circle at top left, #76d5ff 0, #0b3b5b 40%, #020812 100%)",
+    },
+  };
+
   let profile = loadProfile();
   let editingPanelId = null;
 
@@ -137,8 +160,7 @@
   const linkRowTemplate = document.getElementById("link-row-template");
 
   const settingsModalBackdrop = document.getElementById("settings-modal-backdrop");
-  const accentRange = document.getElementById("accent-range");
-  const fontSizeRange = document.getElementById("font-size-range");
+  const themeSelect = document.getElementById("theme-select");
 
   const wallpaperInput = document.getElementById("wallpaper-input");
   const clearWallpaperBtn = document.getElementById("clear-wallpaper-btn");
@@ -179,15 +201,25 @@
     const root = document.documentElement;
     const body = document.body;
 
-    // Accent + typography
-    root.style.setProperty("--accent-hue", profile.accentHue ?? 210);
+    const themeKey = profile.theme || "night-sky";
+    const theme = THEMES[themeKey] || THEMES["night-sky"];
+
+    // Accent
+    root.style.setProperty("--accent-hue", theme.accentHue ?? 210);
+
+    // You can keep baseFontSize for now, or fix it at 16:
     root.style.setProperty("--font-base-size", (profile.baseFontSize || 16) + "px");
     document.querySelectorAll(".panel, .subhead, .link-chip, .input, body").forEach((el) => {
       el.style.setProperty("font-size", "");
     });
 
-    // Force dark theme
+    // Force dark theme (your light-theme tokens still exist if you use them later)
     body.setAttribute("data-theme", "dark");
+
+    // Apply background for theme (unless wallpaper is set)
+    if (!profile.wallpaperDataUrl) {
+      body.style.background = theme.background;
+    }
 
     applyWallpaper();
   }
@@ -620,8 +652,9 @@
   /* Settings modal */
 
   function openSettingsModal() {
-    accentRange.value = profile.accentHue ?? 210;
-    fontSizeRange.value = profile.baseFontSize || 16;
+    if (themeSelect) {
+      themeSelect.value = profile.theme || "night-sky";
+    }
     settingsModalBackdrop.classList.remove("hidden");
   }
 
@@ -651,25 +684,13 @@
     btn.addEventListener("click", closeSettingsModal),
   );
 
-  accentRange.addEventListener("input", () => {
-    profile.accentHue = parseInt(accentRange.value, 10) || 210;
-    applyAppearance();
-  });
-  accentRange.addEventListener("change", () => {
-    saveProfile();
-  });
-
-  fontSizeRange.addEventListener("input", () => {
-    profile.baseFontSize = parseInt(fontSizeRange.value, 10) || 16;
-    document.documentElement.style.setProperty(
-      "--font-base-size",
-      profile.baseFontSize + "px",
-    );
-    document.body.style.fontSize = profile.baseFontSize + "px";
-  });
-  fontSizeRange.addEventListener("change", () => {
-    saveProfile();
-  });
+    if (themeSelect) {
+    themeSelect.addEventListener("change", () => {
+      profile.theme = themeSelect.value;
+      saveProfile();
+      applyAppearance();
+    });
+  }
 
   // Wallpaper upload
   if (wallpaperInput) {
