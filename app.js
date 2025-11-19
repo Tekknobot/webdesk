@@ -298,13 +298,15 @@
       const ul = document.createElement("ul");
       ul.className = "link-list";
 
-      (panel.links || []).forEach((link) => {
+      // NOTE: include idx here
+      (panel.links || []).forEach((link, idx) => {
         if (!link || !link.url) return;
+
         const li = document.createElement("li");
         li.className = "link-item";
         li.draggable = true;
         li.dataset.panelId = panel.id;
-        li.dataset.index = idx; // you need idx from forEach below
+        li.dataset.index = idx;
 
         const a = document.createElement("a");
         a.className = "link-chip";
@@ -327,9 +329,10 @@
 
       card.appendChild(ul);
       panelGrid.appendChild(card);
-
-      enableDragAndDrop();
     });
+
+    // Enable drag-and-drop AFTER everything is rendered
+    enableDragAndDrop();
   }
 
   /* ---------------------------
