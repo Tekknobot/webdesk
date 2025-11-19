@@ -119,7 +119,6 @@
     ],
   };
 
-
   let profile = loadProfile();
   let editingPanelId = null;
 
@@ -303,6 +302,9 @@
         if (!link || !link.url) return;
         const li = document.createElement("li");
         li.className = "link-item";
+        li.draggable = true;
+        li.dataset.panelId = panel.id;
+        li.dataset.index = idx; // you need idx from forEach below
 
         const a = document.createElement("a");
         a.className = "link-chip";
@@ -325,8 +327,122 @@
 
       card.appendChild(ul);
       panelGrid.appendChild(card);
+
+      enableDragAndDrop();
     });
   }
+
+  /* ---------------------------
+    Drag + Drop (Reorder links)
+  -------------------------------- */
+
+  let dragState = {
+    draggingEl: null,
+    placeholder: null,
+    startPanelId: null,
+    startIndex: null,
+    longPressTimer: null,
+  };
+
+  function enableDragAndDrop() {
+    const items = document.querySelectorAll(".link-item");
+
+    items.forEach(item => {
+      item.addEventListener("dragstart", onDragStart);
+      item.addEventListener("dragover", onDragOver);
+      item.addEventListener("drop", onDrop);
+      item.addEventListener("dragend", onDragEnd);
+
+      // Mobile long-press to activate drag
+      item.addEventListener("touchstart", onTouchStart);
+      item.addEventListener("touchend", onTouchEnd);
+    });
+  }
+
+  function onTouchStart(e) {
+    dragState.longPressTimer = setTimeout(() => {
+      e.target.dispatchEvent(new Event("dragstart", { bubbles: true }));
+    }, 300); // long-press delay
+  }
+
+  function onTouchEnd() {
+    clearTimeout(dragState.longPressTimer);
+  }
+
+  function onDragStart(e) {
+    const li = e.target.closest(".link-item");
+    if (!li) return;
+
+    dragState.draggingEl = li;
+    dragState.startPanelId = li.dataset.panelId;
+    dragState.startIndex = Number(li.dataset.index);
+
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", "dragging");
+
+    li.classList.add("dragging");
+  }
+
+  function onDragOver(e) {
+    e.preventDefault();
+    const li = e.target.closest(".link-item");
+    if (!li || li === dragState.draggingEl) return;
+
+    const rect = li.getBoundingClientRect();
+    const halfway = rect.top + rect.height / 2;
+
+    const parent = li.parentElement;
+
+    if (!dragState.placeholder) {
+      dragState.placeholder = document.createElement("li");
+      dragState.placeholder.className = "link-item placeholder";
+    }
+
+    if (e.clientY < halfway) {
+      parent.insertBefore(dragState.placeholder, li);
+    } else {
+      parent.insertBefore(dragState.placeholder, li.nextSibling);
+    }
+  }
+
+  function onDrop(e) {
+    e.preventDefault();
+
+    const placeholder = dragState.placeholder;
+    const dragging = dragState.draggingEl;
+    if (!placeholder || !dragging) return;
+
+    placeholder.replaceWith(dragging);
+  }
+
+  function onDragEnd() {
+    const dragging = dragState.draggingEl;
+    const placeholder = dragState.placeholder;
+
+    if (placeholder) placeholder.remove();
+    if (dragging) dragging.classList.remove("dragging");
+
+    // Re-build link order
+    if (dragging) saveNewOrder(dragging.dataset.panelId);
+
+    dragState.draggingEl = null;
+    dragState.placeholder = null;
+  }
+
+  function saveNewOrder(panelId) {
+    const panel = profile.panels.find(p => p.id === panelId);
+    if (!panel) return;
+
+    const linkItems = [...document.querySelectorAll(`.link-item[data-panel-id="${panelId}"]`)];
+    const newOrder = linkItems.map(li => {
+      const idx = Number(li.dataset.index);
+      return panel.links[idx];
+    });
+
+    panel.links = newOrder;
+    saveProfile();
+  }
+
 
   /* Panel modal */
 
