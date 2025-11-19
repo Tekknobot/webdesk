@@ -94,7 +94,13 @@ body.has-wallpaper {
   border-radius: 14px;
   background: radial-gradient(circle at top left, var(--accent) 0, #111320 52%, #05060b 100%);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.66);
-  font-size: 1.05rem;
+  color: var(--text-main); /* used by the SVG strokes */
+}
+
+.brand-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 .brand-text {

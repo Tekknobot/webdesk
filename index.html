@@ -32,9 +32,62 @@
   <div class="app-shell">
     <header class="top-bar">
       <div class="brand">
-        <span class="brand-mark">⎇</span>
+        <span class="brand-mark" aria-hidden="true">
+          <svg
+            class="brand-icon"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <!-- outer rounded square (desktop tile) -->
+            <rect
+              x="3.5"
+              y="3.5"
+              width="17"
+              height="17"
+              rx="4"
+              ry="4"
+              fill="none"
+              stroke="var(--text-main)"
+              stroke-width="1.6"
+            />
+            <!-- top bar -->
+            <line
+              x1="7"
+              y1="9"
+              x2="17"
+              y2="9"
+              stroke="var(--text-main)"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+            <!-- two “tiles” inside -->
+            <rect
+              x="7"
+              y="11"
+              width="4.5"
+              height="4.5"
+              rx="1.2"
+              ry="1.2"
+              fill="none"
+              stroke="var(--text-main)"
+              stroke-width="1.6"
+            />
+            <rect
+              x="12.5"
+              y="11"
+              width="4.5"
+              height="4.5"
+              rx="1.2"
+              ry="1.2"
+              fill="none"
+              stroke="var(--text-main)"
+              stroke-width="1.6"
+            />
+          </svg>
+        </span>
         <span class="brand-text">WebDesk</span>
       </div>
+
       <div class="top-controls">
         <button id="add-panel-btn" class="btn ghost">+ Panel</button>
         <button id="open-settings-btn" class="btn primary">Settings</button>
