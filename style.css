@@ -489,14 +489,13 @@ body.has-wallpaper {
 /* Icon inside each "app" */
 
 .link-favicon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 36px;              /* was 48px */
+  height: 36px;             /* was 48px */
+  border-radius: 12px;      /* slightly smaller corner */
   background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 70%);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.55);
   object-fit: cover;
 }
-
 
 
 /* Modals */
@@ -659,8 +658,8 @@ body.has-wallpaper {
   }
 
   .link-favicon {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
   }
 
   .link-row {
